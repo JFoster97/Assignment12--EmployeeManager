@@ -72,3 +72,108 @@ function seeDepartment() {
   
     });
   }
+
+function updateDepartment() {
+    connection.query("SELECT * FROM departments", function (err, res) {
+      if (err) throw err;
+      const departments = res.map(element => {
+        return element.id
+      })
+      inquirer
+        .prompt([
+          {
+            name: "department",
+            type: "input",
+            message: "Department?"
+          }
+  
+        ])
+        .then(function (answer) {
+          connection.query(
+            "INSERT INTO departments SET ?",
+            answer,
+            function (err) {
+              if (err) throw err;
+              console.log(`${answer.department} was added successfully`);
+              finished();
+            }
+          );
+        });
+    })
+  }
+
+function updateRoles() {
+    connection.query("SELECT * FROM departments", function (err, res) {
+      if (err) throw err;
+      const departments = res.map(element => {
+        return element.id
+      })
+      inquirer
+        .prompt([
+          {
+            name: "title",
+            type: "input",
+            message: "Title?"
+          },
+          {
+            name: "salary",
+            type: "input",
+            message: "Salary?"
+          },
+          {
+            name: "depId",
+            type: "list",
+            message: "Department id?",
+            choices: departments
+          }
+  
+        ])
+        .then(function (answer) {
+
+          connection.query(
+            "INSERT INTO roles SET ?",
+            answer,
+            function (err) {
+              if (err) throw err;
+              console.log(`${answer.title} was added successfully`);
+              finished();
+            }
+          );
+        });
+    })
+  }
+
+function updateEmployee() {
+    connection.query("SELECT * FROM employees", function (err, res) {
+      if (err) throw err;
+      const lastName = res.map(element => {
+        return element.lastName
+      })
+      inquirer
+        .prompt([
+          {
+            name: "lastName",
+            type: "list",
+            message: "Which Employee?",
+            choices: lastName
+          },
+          {
+            name: "newRole",
+            type: "input",
+            message: "New role?"
+          }
+        ])
+        .then(function (answer) {
+          "UPDATE employees SET roleId = newRole WHERE condition;"
+          connection.query(
+            "INSERT INTO employees SET ?",
+            answer,
+            function (err) {
+              if (err) throw err;
+              console.log(`${answer.lastName}  was added successfully`);
+              finished();
+            }
+          );
+        });
+    })
+  }
