@@ -259,3 +259,65 @@ function createEmployee() {
     })
   
   }
+
+//   Initial prompt function
+function initialPrompt() {
+    inquirer.prompt([{
+      type: "list",
+      name: "doWhat",
+      message: "What would you like to do?",
+      choices: [
+        {
+          name: "View all Employees",
+          value: "viewEmp"
+        },
+        {
+          name: "View all Roles",
+          value: "viewRoles"
+        },
+        {
+          name: "View all Departments",
+          value: "viewDept"
+  
+        }, {
+          name: "Add employee",
+          value: "addEmp"
+        },
+        {
+          name: "Update Employee",
+          value: "updateEmp"
+        },
+        {
+          name: "Add Role",
+          value: "addRole"
+        },
+        {
+          name: "Add Department",
+          value: "addDept"
+        }
+  
+      ]
+    }]).then(({ doWhat }) => {
+      if (doWhat === "viewEmp") {
+        seeEmployee()
+      } else if (doWhat === "addEmp") {
+        createEmployee()
+      } else if (doWhat === "addRole") {
+        newRoles();
+      } else if (doWhat === "updateEmp") {
+        updateEmployee();
+      }
+      else if (doWhat === "addDept") {
+        updateDepartment()
+      }
+      else if (doWhat === "viewRole") {
+        seeRoles()
+      }
+      else if (doWhat === "viewDept") {
+        seeDepartment()
+      }
+      else if (doWhat === "updateRole") {
+        updateRole()
+      }
+    })
+  }
