@@ -83,8 +83,9 @@ function updateDepartment() {
         .prompt([
           {
             name: "department",
-            type: "input",
-            message: "Department?"
+            type: "list",
+            message: "Department?",
+            choices: departments
           }
   
         ])
@@ -102,10 +103,10 @@ function updateDepartment() {
     })
   }
 
-function updateRoles() {
+function newRoles() {
     connection.query("SELECT * FROM departments", function (err, res) {
       if (err) throw err;
-      const departments = res.map(element => {
+      const departmentsList = res.map(element => {
         return element.id
       })
       inquirer
@@ -124,7 +125,7 @@ function updateRoles() {
             name: "depId",
             type: "list",
             message: "Department id?",
-            choices: departments
+            choices: departmentsList
           }
   
         ])
@@ -143,6 +144,45 @@ function updateRoles() {
     })
   }
 
+function updateRole() {
+    connection.query("SELECT * FROM roles", function (err, res) {
+      if (err) throw err;
+      const empRoles = res.map(element => {
+        return element.id
+      })
+      inquirer
+        .prompt([
+          {
+            name: "firstName",
+            type: "input",
+            message: "What is their first name?"
+          },
+          {
+            name: "lastName",
+            type: "input",
+            message: "What is their last name?"
+          },
+          {
+            name: "roleId",
+            type: "list",
+            message: "What is their role id?",
+            choices: empRoles
+          }
+  
+        ])
+        .then(function (answer) {
+            connection.query(
+              "INSERT INTO employees SET ?",
+              answer,
+              function (err) {
+                if (err) throw err;
+                console.log(`${answer.firstName} ${answer.lastName} was added successfully`);
+                finished();
+              }
+            );
+          });
+      })
+    }
 function updateEmployee() {
     connection.query("SELECT * FROM employees", function (err, res) {
       if (err) throw err;
@@ -176,4 +216,46 @@ function updateEmployee() {
           );
         });
     })
+  }
+
+//   Create new employee
+function createEmployee() {
+    connection.query("SELECT id, title from roles", function (err, res) {
+      if (err) throw err;
+      const roles = res.map(element => element.title)
+      inquirer.prompt([
+        {
+          name: "firstName",
+          type: "input",
+          message: "First Name?"
+        },{
+          name: "lastName",
+          type: "input",
+          message: "Last Name?"
+        }, {
+          name: "roles",
+          type: "list",
+          message: "Role?",
+          choices: roles
+        }
+      ]).then(answers => {
+        const newRole = res.find(element => {
+          return element.title === answers.roles
+        });
+        console.log(chosenRole.id);
+        const newEmployee = {
+          firstName: answers.firstName,
+          lastName: answers.lastName,
+          roleId: newRole.id
+        };
+        connection.query("INSERT INTO employees SET ?", newEmployee, (err, success) => {
+          if (err) throw err;
+          console.log(`${newEmployee.firstName} was added successfully`);
+          finished();
+        })
+  
+      })
+  
+    })
+  
   }
